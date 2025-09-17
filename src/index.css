@@ -1,0 +1,215 @@
+body{
+    margin: 0;
+    height: 100%;
+    
+}
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.nav-link{
+    text-decoration: none;
+    font-size: 19px;
+    padding: 0 .3rem;
+    color: black;
+}
+.container-main{
+    margin-top: 50px;
+    max-width: 100%;
+    padding: 0 100px;
+    background-color: rgb(229, 227, 227);
+    height: 175px;
+}
+.services {
+    display: flex;
+    flex-direction: row;
+    max-width: 100%;
+}
+.row{
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    text-align: center;
+    margin-top: 15px;
+}
+   
+.col-3{
+    width: calc(100% / 4);
+}
+.col-3 .service{
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+.col-3 .service-content h5 {
+    font-size: 25px;
+    margin: 5px;
+}
+.col-3 .service-content p {
+    font-size: 19px;
+    margin: 5px;
+}
+.col-3 .service-icon{
+    font-size: 25px;
+}
+.brands{
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    margin: 10px 90px;
+}
+.row-brand{
+    flex-direction: row;
+    flex-grow: 1;
+    padding-top: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.row-brand .col-1{
+    width: calc(100% / 7);
+    margin: 0 20px;
+  
+}
+img{
+    width: 100%;
+    height: 100% ;
+}
+.list-unstyled{
+    list-style-type: none;
+}
+.container-footer{
+    background-color: #373636;
+    color: white;
+    margin-top: 100px;
+    height: 100%;
+}
+.col-10{
+    max-width: 100%;
+    height: 100%;
+    margin-right: 50px;
+    margin-left: 35px;
+}
+.col-2{
+    width: 65%;
+    height: 100%;
+    margin-left: 50px;
+    
+}
+.col-2 h5{
+    font-size: 21px;
+}
+.col-2 p{
+    font-size: 18px;
+}
+.col-10 p{
+    font-size: 17px;
+}
+.col-10 h5{
+    font-size: 21px;
+}
+.col-2 .li{
+    font-size: 18px;
+}
+
+.container-col{
+    display: flex;
+    max-width: 100%;
+    padding: 10px 100px;
+
+}
+.container-col .col-6{
+    width: 100%;
+    border: 1px solid rgb(243, 240, 240);
+    border-radius: 5px;
+}
+.col-6 .image{
+     display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container-card{
+    display: flex;
+}
+.container-card .row{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 50px;
+    border: 1px solid rgb(245, 245, 245);
+}
+
+.row .col-3{
+    width: calc(100% / 3);
+}
+
+.row .col-3 .card{
+    background-color: rgb(252, 252, 252);
+    margin: 15px 25px;
+    border: 1px solid rgb(241, 241, 241);
+}
+.col-3 .card .image-top{
+    width: 180px;      /* scegli la larghezza che preferisci */
+    height: 195px;     /* scegli l'altezza che preferisci */
+    display: block;
+    margin: 0 auto;
+}
+.col-3 .card-body h4{
+    margin: 20px 20px 5px 20px;
+    text-align: left;
+    font-size: 19px;
+}
+
+.col-3 .card-body h5{
+    margin: 5px 20px;
+    text-align: left;
+    font-size: 16px;
+}
+.col-3 .card-body p{
+    margin: 5px 20px;
+    text-align: left;
+    font-size: 13px;
+}
+.col-3 .card-body .spam{
+    color: #ff6543;
+    font-weight: bold;
+}
+.container-id{
+    margin: 10px 150px;
+    max-height: 100%;
+}
+.container-id .container-card{
+    margin: 35px 20px;
+    display: flex;
+    width: 100%;
+    border: 1px solid rgb(238, 237, 237);
+}
+.container-card .row .col-8{
+    width: 60%;
+}
+.container-card .row .col-4{
+    width: 40%;
+}
+.container-id .button p{
+    margin: 5px 20px ;
+    width: 105px;
+    padding: 5px 10px;
+    background-color: rgb(22, 22, 252);
+    color: white;
+    border: 1px solid rgb(103, 103, 255);
+}
+.button  a{
+    text-decoration: none;
+}
+.container-card .col-4 h2 .spam{
+    color: #ff6543;
+}
+
+.container-card .col-4 h4 .spam{
+    color: #ff6543;
+}
+.container-card .col-4 p .spam{
+    color: #ff6543;
+}
