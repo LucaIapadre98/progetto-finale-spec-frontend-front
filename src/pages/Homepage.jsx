@@ -1,5 +1,4 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faHeart,faCartShopping, faTrophy, faClipboardList, faShieldHalved  } from "@fortawesome/free-solid-svg-icons";
 import MenuLink from "../components/MenuLink";
 import { useState } from "react";
@@ -18,10 +17,9 @@ import TabletImg from "../public/brand/tablet.jpg";
 import Footer from "../components/Footer";
 
 export default function Homepage(){
-     
     const [searchParams, setSearchParams] = useSearchParams();
     // const navigate = useNavigate();
-    const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "" );
+    const [searchTerm] = useState(searchParams.get("q") || "" );
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     
@@ -44,17 +42,7 @@ export default function Homepage(){
             );
         }
     }, [searchTerm, products]);
-
-    const handleSubmit = (e) => {               // Gestione submit ricerca
-        e.preventDefault();
-        const newParams = {
-            ...Object.fromEntries(searchParams.entries()),
-            q: searchTerm,
-            page: 1,
-        };
-        setSearchParams(newParams);         // Non serve navigate rimanendo sulla stessa pagina
-    };
-
+  
     return (
         <>
           <header className="container">
@@ -69,38 +57,10 @@ export default function Homepage(){
               <div className="container-link">
                 <MenuLink />
               </div>
-              <div className="d-flex flex-column flex-md-row col-12 col-md-3 justify-content-center align-items-center">
-                <form  className="d-flex justify-content-center align-items-center np-form w-100 mt-2 mt-md-0">
-                  <input 
-                    type="text" 
-                    className="form-control border-0 shadow-none np-input" 
-                    style={{padding: "7px 14px",}} 
-                    placeholder="Cerca..." 
-                    value={searchTerm} 
-                    onChange={(e) => setSearchTerm(e.target.value)} 
-                  />
-                  <button
-                    className="btn"
-                    type="submit"
-                    style={{
-                      background: "#ff6543",
-                      color: "#fff",
-                      borderRadius: "0 25px 25px 0",
-                      border: "none",
-                      padding: "8px 14px",
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faMagnifyingGlass} />
-                  </button>
-                </form>
-              </div>
               <div className="d-flex flex-md-row-reverse flex-grow-1 gap-3 col-12 col-sm-2 justify-content-center justify-content-md-start align-items-center">
                 <div className="buttons d-flex gap-3">
-                  <Link className="position-relative mt-2" to="">
+                  <Link className="position-relative mt-2" to={`/`}>
                     <FontAwesomeIcon className="fs-4" style={{ color: "#ff6543", fontFamily:"30px"}} icon={faHeart} />
-                  </Link>
-                  <Link className="position-relative mt-2" to="">
-                    <FontAwesomeIcon className="fs-4" style={{ color: "#ff6543" }} icon={faCartShopping} />
                   </Link>
                 </div>
               </div>
@@ -198,12 +158,20 @@ export default function Homepage(){
               <div className="row">
                 <div className="col-6">
                   <div className="image">
-                   <img src={SmartphoneImg} alt="Smartphone" />
+                   <img src={SmartphoneImg} style={{
+                    width:"80%",
+                    height:"85%",
+                   }} 
+                   alt="Smartphone" />
                   </div>
                 </div>
                 <div className="col-6">
                   <div className="image">
-                   <img src={TabletImg} alt="Tablet" />
+                   <img src={TabletImg}
+                   style={{
+                    width:"80%",
+                    height:"85%",
+                   }}  alt="Tablet" />
                   </div>
                 </div>
               </div>

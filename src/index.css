@@ -7,7 +7,7 @@ body{
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-around;
 }
 .nav-link{
     text-decoration: none;
@@ -20,7 +20,8 @@ body{
     max-width: 100%;
     padding: 0 100px;
     background-color: rgb(229, 227, 227);
-    height: 175px;
+    height: 170px;
+    
 }
 .services {
     display: flex;
@@ -212,4 +213,28 @@ img{
 }
 .container-card .col-4 p .spam{
     color: #ff6543;
+}
+
+.row-table .col-4 p{
+    margin: 0px 5px 0 20px ;
+    width: 105px;
+    padding: 4px 11px;
+    background-color: rgb(22, 22, 252);
+    color: white;
+    border: 1px solid rgb(103, 103, 255);
+}
+
+.row-table .col-4 a{
+    text-decoration: none;
+}
+.button-wishlist p {
+    margin: 5px 20px ;
+    width: 105px;
+    padding: 5px 10px;
+    background-color: rgb(22, 22, 252);
+    color: white;
+    border: 1px solid rgb(103, 103, 255);
+}
+.button-wishlist  a{
+    text-decoration: none;
 }
