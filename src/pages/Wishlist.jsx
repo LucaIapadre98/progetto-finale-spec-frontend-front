@@ -59,25 +59,26 @@ export default function Wishlist (){
                             wishlist.map(product => (
                                 <div className="col-3" key={product.id}>
                                     <div className="card">
-                                        <img
-                                            src={`http://localhost:3001/${product.image}`}
-                                            alt={product.name}
-                                            className="card-img-top"
-                                            style={{ width: "180px", height: "180px", objectFit: "cover", margin: "0 auto" }}
-                                        />
+                                        <Link to={`/products/${product.id}`}>
+                                            <img
+                                                src={`http://localhost:3001/${product.image}`}
+                                                alt={product.name}
+                                                className="card-img-top"
+                                                style={{ width: "160px", height: "190px", objectFit: "cover", margin: "0 auto" }}
+                                            />
+                                        </Link>
                                         <div className="card-body">
-                                            <h5 className="card-title">{product.title}</h5>
-                                            <p className="card-text">{product.category}</p>
-                                            <p className="card-text">{product.description}</p>
-                                            <p className="card-text"><strong>{product.price} €</strong></p>
-                                            <button
+                                            <h3 className="card-title">{product.title}</h3>
+                                            <p className="card-text" style={{fontSize:"17px"}}><spam style={{color:"#ff6543"}}>Categoria: </spam>{product.category}</p>
+                                            <p className="card-text" style={{fontSize:"17px"}}><spam style={{color:"#ff6543"}}>Prezzo:</spam> <strong>{product.price} €</strong></p>
+                                                <button
                                                 className="btn"
-                                                style={{ color: "#ff6543", background: "none", border: "none", fontSize: "1.5rem" }}
+                                                style={{ color: "#ff6543", background: "none", border: "none", fontSize: "1.5rem", marginBottom:"40px" }}
                                                 onClick={() => removeFromWishlist(product.id)}
                                                 title="Rimuovi dalla wishlist"
-                                            >
-                                                <FontAwesomeIcon icon={ faTrashCan} style={{ color: "#ff6543", border:"1px solid #ff6543", padding:"3px 3px", borderRadius:"4px", backgroundColor:"white", marginRight:" 350px", marginTop:"80px"}} />
-                                            </button>
+                                                >
+                                                    <FontAwesomeIcon icon={ faTrashCan} style={{ color: "#ff6543", border:"1px solid #ff6543", padding:"3px 3px", borderRadius:"4px", backgroundColor:"white", marginRight:" 350px", marginTop:"40px", marginBottom:"40px"}} />
+                                                </button>
                                         </div>
                                     </div>
                                 </div>
