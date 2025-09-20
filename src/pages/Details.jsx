@@ -28,6 +28,22 @@ export default function Details (){
             .catch(err => console.error(err));
     }, []);
 
+    const [wishlist, setWishlist] = useState(() => {                           // Recupera la wishlist dal localStorage se esiste
+        const saved = localStorage.getItem("wishlist");
+        return saved ? JSON.parse(saved) : [];
+    });
+ 
+    const toggleWishlist = (product) => {                             // Funzione toggle che aggiunge i prodotti nella wishlist
+        let updated;
+        if (wishlist.some(item => item.id === product.id)) {
+            updated = wishlist.filter(item => item.id !== product.id);
+        } else {
+        updated = [...wishlist, product];
+        }
+        setWishlist(updated);
+        localStorage.setItem("wishlist", JSON.stringify(updated));
+    };
+
     return (
         <>
         <header className="container">
@@ -81,7 +97,7 @@ export default function Details (){
                                             padding:"5px 5px", 
                                             borderRadius:"4px",
                                             backgroundColor:"white"
-                                        }} icon={faHeart} />
+                                        }} icon={faHeart} onClick={() => toggleWishlist(product)} />
                                     </Link>
                                 </p>
                             </div>

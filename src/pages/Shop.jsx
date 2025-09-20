@@ -1,6 +1,7 @@
 import MenuLink from "../components/MenuLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart,faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { Link , useSearchParams, useLocation  } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -8,7 +9,7 @@ import Footer from "../components/Footer";
 import Search from "../components/Search";
 
 export default function Shop (){
-
+    
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [searchParams] = useSearchParams();
@@ -67,6 +68,21 @@ export default function Shop (){
         setFilteredProducts(sorted);
         setSortOrder({ field: "category", asc });
     };
+    const [wishlist, setWishlist] = useState(() => {                           // Recupera la wishlist dal localStorage se esiste
+        const saved = localStorage.getItem("wishlist");
+        return saved ? JSON.parse(saved) : [];
+    });
+ 
+    const toggleWishlist = (product) => {                             // Funzione toggle che aggiunge i prodotti nella wishlist
+        let updated;
+        if (wishlist.some(item => item.id === product.id)) {
+            updated = wishlist.filter(item => item.id !== product.id);
+        } else {
+        updated = [...wishlist, product];
+        }
+        setWishlist(updated);
+        localStorage.setItem("wishlist", JSON.stringify(updated));
+    };
 
     return (
         <>
@@ -99,7 +115,7 @@ export default function Shop (){
             <div className="container-card">
                 <div className="row">
                     <div className="col-12">
-                        <div className="row-table" style={{display: "flex", flexDirection:"row", margin:"0", justifyContent:"space-evenly", width:"100%", margin:" 10px 10px"}}>
+                        <div className="row-table" style={{display: "flex", flexDirection:"row", justifyContent:"space-evenly", width:"100%"}}>
                             <div className="col-12">
                                 {location.pathname !== "/shop" && (
                                     <Link to="/shop" className="btn btn-primary">
@@ -165,29 +181,39 @@ export default function Shop (){
                                 </div>
                             )}            
                             {filteredProducts.length === 0 ? (
-                                <div className="col-12">Nessun prodotto trovato</div>
+                                <div className="row justify-content-center" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>Nessun prodotto trovato</div>
                             ) : (
                                 filteredProducts
                                     .filter(product => selectedCategory === "" ? true : product.category === selectedCategory)
-                                .map(product => (
-                                    <div className="col-3" key={product.id}>
+                                    .map(product => (
+                                    <div className="col-3" 
+                                        key={product.id}
+                                        style={{
+                                            minWidth: filteredProducts.length <= 2 ? "320px" : "220px",
+                                            maxWidth: "350px",
+                                            flex: "1 1 320px",
+                                            margin: "20px"
+                                        }}>
                                         <div className="card">
                                             <Link to={`/products/${product.id}`}>
                                                 <img 
                                                     src={`http://localhost:3001/${product.image}`}
-                                                    style={{width: "50%", height:"50%", alignItems:"center"}}  
+                                                    style={{maxWidth: "100%", maxHeight:"100%", alignItems:"center"}}  
                                                     alt={product.name} 
                                                     className="image-top"
                                                 />
                                             </Link>
                                             <div className="card-body">
-                                                <h3 className="card-title">{product.title}</h3>
-                                                <h6 className="card-text">{product.category}</h6>
-                                                <p>
-                                                    <Link className="position-relative mt-2" to={`/wishlist`} style={{ marginLeft:"10px"}}>
-                                                        <FontAwesomeIcon className="fs-4" style={{ color: "#ff6543", border:"1px solid #ff6543", padding:"5px 5px", borderRadius:"4px", backgroundColor:"white"}} icon={faHeart} />
+                                                <h2 className="card-title">{product.title}</h2>
+                                                <h5 className="card-text">{product.category}</h5>
+                                                <div className="button-click" style={{textAlign:"left"}}>
+                                                    <Link className="mt-2"  style={{ marginLeft:"30px"}}>
+                                                        <FontAwesomeIcon className="fs-4" style={{ color: "#ff6543", border:"1px solid #ff6543", padding:"5px 5px", borderRadius:"4px", backgroundColor:"white", margin:"50px 0"}} icon={faHeart} onClick={() => toggleWishlist(product)} />
                                                     </Link>
-                                                </p>
+                                                    <Link className=" mt-2" to={``} style={{ marginLeft:"5px"}}>
+                                                        <FontAwesomeIcon className="fs-4" style={{ color: "hsla(113, 90%, 72%, 1.00)", border:"1px solid hsla(113, 90%, 72%, 1.00)", padding:"5px 5px", borderRadius:"4px", backgroundColor:"white", margin:"50px 0"}} icon={faCircleCheck} />
+                                                    </Link>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

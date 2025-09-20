@@ -59,7 +59,7 @@ export default function Homepage(){
               </div>
               <div className="d-flex flex-md-row-reverse flex-grow-1 gap-3 col-12 col-sm-2 justify-content-center justify-content-md-start align-items-center">
                 <div className="buttons d-flex gap-3">
-                  <Link className="position-relative mt-2" to={`/`}>
+                  <Link className="position-relative mt-2"  to={`/wishlist`}>
                     <FontAwesomeIcon className="fs-4" style={{ color: "#ff6543", fontFamily:"30px"}} icon={faHeart} />
                   </Link>
                 </div>
