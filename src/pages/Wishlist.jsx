@@ -54,7 +54,11 @@ export default function Wishlist (){
                 <div className="container-card">
                     <div className="row">
                         {wishlist.length === 0 ? (
-                            <div className="col-12">Nessun prodotto nella wishlist</div>
+                             <div className="container text-center my-5" style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", height:"80vh", paddingLeft:"600px"}}>
+                                    <div className="title" style={{textAlign:"center", marginBottom:"60px"}}>
+                                        <h1>Nessun prodotto nella wishlist</h1>
+                                    </div>
+                                </div>
                         ) : (
                             wishlist.map(product => (
                                 <div className="col-3" key={product.id}>
@@ -69,15 +73,15 @@ export default function Wishlist (){
                                         </Link>
                                         <div className="card-body">
                                             <h3 className="card-title">{product.title}</h3>
-                                            <p className="card-text" style={{fontSize:"17px"}}><spam style={{color:"#ff6543"}}>Categoria: </spam>{product.category}</p>
-                                            <p className="card-text" style={{fontSize:"17px"}}><spam style={{color:"#ff6543"}}>Prezzo:</spam> <strong>{product.price} €</strong></p>
+                                            <p className="card-text" style={{fontSize:"17px", textAlign:"center"}}><spam style={{color:"#ff6543"}}>Categoria: </spam>{product.category}</p>
+                                            <p className="card-text" style={{fontSize:"17px", textAlign:"center"}}><spam style={{color:"#ff6543"}}>Prezzo:</spam> <strong>{product.price} €</strong></p>
                                                 <button
                                                 className="btn"
-                                                style={{ color: "#ff6543", background: "none", border: "none", fontSize: "1.5rem", marginBottom:"40px" }}
+                                                style={{ color: "#ff6543", background: "none", border: "none", fontSize: "1.5rem", marginBottom:"40px", textAlign:"center" }}
                                                 onClick={() => removeFromWishlist(product.id)}
                                                 title="Rimuovi dalla wishlist"
                                                 >
-                                                    <FontAwesomeIcon icon={ faTrashCan} style={{ color: "#ff6543", border:"1px solid #ff6543", padding:"3px 3px", borderRadius:"4px", backgroundColor:"white", marginRight:" 350px", marginTop:"40px", marginBottom:"40px"}} />
+                                                    <FontAwesomeIcon icon={ faTrashCan} style={{textAlign:"center", color: "#ff6543", border:"1px solid #ff6543", padding:"3px 3px", borderRadius:"4px", backgroundColor:"white", marginTop:" 35px"}} />
                                                 </button>
                                         </div>
                                     </div>

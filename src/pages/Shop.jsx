@@ -84,6 +84,28 @@ export default function Shop (){
         localStorage.setItem("wishlist", JSON.stringify(updated));
     };
 
+    // Stato per la lista di confronto, sincronizzato con localStorage
+    const [compareList, setCompareList] = useState(() => {
+        const saved = localStorage.getItem("compareList");
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    // Aggiorna localStorage quando compareList cambia
+    useEffect(() => {
+        localStorage.setItem("compareList", JSON.stringify(compareList));
+    }, [compareList]);
+
+    // Funzione toggle per aggiungere/rimuovere prodotti dalla lista di confronto
+    const toggleCompare = (product) => {
+        let updated;
+        if (compareList.some(item => item.id === product.id)) {
+            updated = compareList.filter(item => item.id !== product.id);
+        } else {
+            updated = [...compareList, product];
+        }
+        setCompareList(updated);
+    };
+
     return (
         <>
             <header className="container">
@@ -210,9 +232,21 @@ export default function Shop (){
                                                     <Link className="mt-2"  style={{ marginLeft:"30px"}}>
                                                         <FontAwesomeIcon className="fs-4" style={{ color: "#ff6543", border:"1px solid #ff6543", padding:"5px 5px", borderRadius:"4px", backgroundColor:"white", margin:"50px 0"}} icon={faHeart} onClick={() => toggleWishlist(product)} />
                                                     </Link>
-                                                    <Link className=" mt-2" to={``} style={{ marginLeft:"5px"}}>
-                                                        <FontAwesomeIcon className="fs-4" style={{ color: "hsla(113, 90%, 72%, 1.00)", border:"1px solid hsla(113, 90%, 72%, 1.00)", padding:"5px 5px", borderRadius:"4px", backgroundColor:"white", margin:"50px 0"}} icon={faCircleCheck} />
-                                                    </Link>
+                                                    <span className="mt-2" style={{ marginLeft:"5px", cursor: "pointer" }}>
+                                                        <FontAwesomeIcon
+                                                            className="fs-4"
+                                                            style={{
+                                                                color: compareList.some(item => item.id === product.id) ? "green" : "hsla(113, 90%, 72%, 1.00)",
+                                                                border: "1px solid hsla(113, 90%, 72%, 1.00)",
+                                                                padding: "5px 5px",
+                                                                borderRadius: "4px",
+                                                                backgroundColor: compareList.some(item => item.id === product.id) ? "#eaffea" : "white",
+                                                                margin: "50px 0"
+                                                            }}
+                                                            icon={faCircleCheck}
+                                                            onClick={() => toggleCompare(product)}
+                                                        />
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -222,6 +256,14 @@ export default function Shop (){
                         </div>
                     </div>
                 </div>
+                {/* Pulsante per andare alla pagina di confronto se almeno 2 prodotti selezionati */}
+                {compareList.length >= 2 && (
+                    <div className="text-center my-3">
+                        <Link to="/compare" className="btn btn-success" style={{textDecoration:"none", border:"1px solid #ff6543", display:"inline-block", padding:"5px 10px", borderRadius:"4px", color:"#ff6543", margin:" 20px 10px"}}>
+                            Confronta {compareList.length} prodotti selezionati
+                        </Link>
+                    </div>
+                )}
             </div>
             </main>
             <Footer />
