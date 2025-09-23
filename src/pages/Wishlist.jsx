@@ -1,8 +1,9 @@
 import MenuLink from "../components/MenuLink";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faTrashCan} from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faTrash} from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
+import Footer from "../components/Footer";
 
 export default function Wishlist (){
 
@@ -68,7 +69,7 @@ export default function Wishlist (){
                                                 src={`http://localhost:3001/${product.image}`}
                                                 alt={product.name}
                                                 className="card-img-top"
-                                                style={{ width: "160px", height: "190px", objectFit: "cover", margin: "0 auto" }}
+                                                style={{ width: "180px", height: "195px", objectFit: "cover", margin: "0 auto" }}
                                             />
                                         </Link>
                                         <div className="card-body">
@@ -81,7 +82,7 @@ export default function Wishlist (){
                                                 onClick={() => removeFromWishlist(product.id)}
                                                 title="Rimuovi dalla wishlist"
                                                 >
-                                                    <FontAwesomeIcon icon={ faTrashCan} style={{textAlign:"center", color: "#ff6543", border:"1px solid #ff6543", padding:"3px 3px", borderRadius:"4px", backgroundColor:"white", marginTop:" 35px"}} />
+                                                    <FontAwesomeIcon icon={ faTrash} style={{textAlign:"center", color: "#ff6543", border:"1px solid #ff6543", padding:"3px 3px", borderRadius:"4px", backgroundColor:"white", marginTop:" 35px"}} />
                                                 </button>
                                         </div>
                                     </div>
@@ -90,8 +91,8 @@ export default function Wishlist (){
                         )}
                     </div>
                 </div>
-
             </main>
+            <Footer />
         </>
     );
 };

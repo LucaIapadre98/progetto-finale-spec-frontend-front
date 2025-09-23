@@ -134,6 +134,7 @@ img{
 }
 .container-card{
     display: flex;
+    margin: 10px 100px;
 }
 .container-card .row{
     display: flex;
@@ -228,7 +229,7 @@ img{
     text-decoration: none;
 }
 .button-wishlist p {
-    margin: 5px 20px ;
+    margin: 15px 150px ;
     width: 105px;
     padding: 5px 10px;
     background-color: white;

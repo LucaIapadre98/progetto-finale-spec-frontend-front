@@ -4,6 +4,7 @@ import MenuLink from "../components/MenuLink";
 import Search from "../components/Search";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faTrash } from "@fortawesome/free-solid-svg-icons";
+import Footer from "../components/Footer";
 
 
 export default function Compare (){
@@ -59,11 +60,11 @@ export default function Compare (){
                 <div className="container-link">
                     <MenuLink />
                 </div>
-                <Search
+                {/* <Search
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
                     onSubmit={handleSubmitSearch} 
-                />
+                /> */}
                 <div className="d-flex flex-md-row-reverse flex-grow-1 gap-3 col-12 col-sm-2 justify-content-center justify-content-md-start align-items-center">
                     <div className="buttons d-flex gap-3">
                         <Link className="position-relative mt-2" to={`/wishlist`}>
@@ -73,36 +74,81 @@ export default function Compare (){
               </div>
             </header>
             <main>
-                <div className="container my-5"style={{display:"block", justifyContent:"center", alignItems:"center"}}>
-                    <div className="title" style={{textAlign:"center", marginBottom:"60px"}}>
-                        <h2 className="text-center" style={{fontSize:" 40px", color:"#ff6543"}}>Confronto prodotti</h2>
-                    </div>
-                    <div className="row justify-content-center">
-                        {compareList.map(product => (
-                            <div className="col-md-4" key={product.id}>
-                                <div className="card mb-4" style={{border:"1px solid rgb(238, 237, 237)", margin:"5px 25px"}}>
-                                    <img
-                                        src={`http://localhost:3001/${product.image}`}
-                                        className="card-img-top"
-                                        alt={product.title}
-                                        style={{ maxHeight: "200px", objectFit: "contain" }}
-                                    />
-                                    <div className="card-body d-flex flex-column flex-grow-1">
-                                        <h3 className="card-title">{product.title}</h3>
-                                        <p className="card-text"><span style={{fontWeight:"bold", color:"#ff6543"}}>Categoria:</span> {product.category}</p>
-                                        <p className="card-text"><span style={{fontWeight:"bold",color:"#ff6543"}}>Brand:</span> {product.brand}</p>
-                                        <p className="card-text"><span style={{fontWeight:"bold", color:"#ff6543"}}>Prezzo:</span> €{product.price.toFixed(2)}</p>
-                                        <p className="card-description" style={{margin:"5px 50px"}}><span style={{fontWeight:"bold", color:"#ff6543"}}>Descrizione:</span> {product.description}</p>
-                                        <button onClick={() => removeFromCompare(product.id)} className="btn btn-danger" style={{textDecoration:"none",background:"white", border:"1px solid #ff6543", display:"inline-block", padding:"5px 10px", borderRadius:"4px", color:"#ff6543", margin:" 20px 10px"}}>
-                                            <FontAwesomeIcon icon={faTrash} />
-                                        </button>
+                 <div className="button-wishlist" style={{margin:"15px 100px 0 100px"}}>
+                    <Link 
+                        to={`/shop`}  
+                    >
+                        <p>
+                            Torna allo shop
+                        </p>
+                    </Link>
+                </div>
+                <div className="title" style={{textAlign:"center", marginBottom:"40px"}}>
+                    <h2 className="text-center" style={{fontSize:" 40px", color:"#ff6543"}}>Confronto prodotti</h2>
+                </div>
+                <div className="container-card-compare" style={{margin:"0 100px"}}>
+                    <div className="row align-items-stretch">
+                            {compareList.map(product => (
+                                <div className="col-3 d-flex h-100" key={product.id}>
+                                    <div className="card  h-100 d-flex flex-column" style={{border:"1px solid rgb(238, 237, 237)", margin:"5px 10px"}}>
+                                        <Link to={`/products/${product.id}`}>
+                                            <img
+                                                src={`http://localhost:3001/${product.image}`}
+                                                alt={product.name}
+                                                className="card-img-top"
+                                                style={{ width: "180px", height: "195px", objectFit: "cover", margin: "0 auto" }}
+                                            />
+                                        </Link>
+                                        <div className="card-compare-body d-flex flex-column flex-grow-1">
+                                            <h3 className="card-title">{product.title}</h3>
+                                            <p className="card-text"><span style={{fontWeight:"bold", color:"#ff6543"}}>Categoria:</span> {product.category}</p>
+                                            <p className="card-text"><span style={{fontWeight:"bold",color:"#ff6543"}}>Brand:</span> {product.brand}</p>
+                                            <p className="card-text"><span style={{fontWeight:"bold", color:"#ff6543"}}>Prezzo:</span> €{product.price.toFixed(2)}</p>
+                                            <p className="card-description" style={{margin:"5px 50px"}}><span style={{fontWeight:"bold", color:"#ff6543"}}>Descrizione:</span> {product.description}</p>
+                                            <button onClick={() => removeFromCompare(product.id)} className="btn btn-danger" style={{textDecoration:"none",background:"white", border:"1px solid #ff6543", display:"inline-block", padding:"5px 10px", borderRadius:"4px", color:"#ff6543", margin:" 20px 10px"}}>
+                                                <FontAwesomeIcon icon={faTrash} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
                     </div>
                 </div>
             </main>
+            <Footer />
         </>
     );
 };
+
+//  <div className="container my-5"style={{display:"block", justifyContent:"center", alignItems:"center"}}>
+//                     <div className="title" style={{textAlign:"center", marginBottom:"60px"}}>
+//                         <h2 className="text-center" style={{fontSize:" 40px", color:"#ff6543"}}>Confronto prodotti</h2>
+//                     </div>
+//                     <div className="row justify-content-center ">
+//                         {compareList.map(product => (
+//                             <div className="col-md-4 d-flex h-100" key={product.id}>
+//                                 <div className="card mb-4 h-100" 
+//                                     style={{
+//                                         border:"1px solid rgb(238, 237, 237)", 
+//                                         margin:"5px 25px", 
+//                                         display:"flex", 
+//                                         flexDirection:"column", 
+                                        
+//                                     }}
+//                                 >
+//                                     <Link to={`/products/${product.id}`}>
+//                                     <img
+//                                         src={`http://localhost:3001/${product.image}`}
+//                                         className="card-img-top"
+//                                         alt={product.title}
+//                                         style={{ maxHeight: "200px", objectFit: "contain" }}
+//                                     />
+//                                     </Link>
+//                                     <div className="card-body d-flex flex-column flex-grow-1">
+//        
+//                                     </div>
+//                                 </div>
+//                             </div>
+//                         ))}
+//                     </div>
+//                 </div>
