@@ -64,7 +64,7 @@ body{
 .row-brand{
     flex-direction: row;
     flex-grow: 1;
-    padding-top: 80px;
+    padding-top: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -140,7 +140,6 @@ img{
     display: flex;
     flex-wrap: wrap;
     margin: 20px 50px;
-    border: 1px solid rgb(245, 245, 245);
 }
 
 .row .col-3{
@@ -205,15 +204,15 @@ img{
 .button  a{
     text-decoration: none;
 }
-.container-card .col-4 h2 .spam{
-    color: #ff6543;
+.container-card .col-4 h2 .span{
+    color: black;
 }
 
-.container-card .col-4 h4 .spam{
-    color: #ff6543;
+.container-card .col-4 h4 .span{
+    color: black;
 }
-.container-card .col-4 p .spam{
-    color: #ff6543;
+.container-card .col-4 p .span{
+    color: black;
 }
 
 .row-table .col-4 p{

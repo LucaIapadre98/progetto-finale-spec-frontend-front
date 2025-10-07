@@ -7,22 +7,25 @@ import Footer from "../components/Footer";
 
 export default function Wishlist (){
 
-    const [wishlist, setWishlist] = useState([]);
+    const [wishlist, setWishlist] = useState([]);                                              // Stato per la wishlist                                               
+    
+
+
 
     useEffect(() => {
-        const saved = localStorage.getItem("wishlist");
-        setWishlist(saved ? JSON.parse(saved) : []);
+        const saved = localStorage.getItem("wishlist");                                  // Recupera la wishlist dal localStorage se esiste
+        setWishlist(saved ? JSON.parse(saved) : []);                                     // Altrimenti ritorna con un array vuoto, converte in oggetto JS
     }, []);
 
-    const removeFromWishlist = (id) => {
-        const updated = wishlist.filter(product => product.id !== id);
-        setWishlist(updated);
-        localStorage.setItem("wishlist", JSON.stringify(updated));
+    const removeFromWishlist = (id) => {                                                // Funzione per rimuovere i prodotti dalla wishlist
+        const updated = wishlist.filter(product => product.id !== id);                  // Filtra la wishlist rimuovendo il prodotto con l'id specificato
+        setWishlist(updated);                                                           // Aggiorna lo stato della wishlist
+        localStorage.setItem("wishlist", JSON.stringify(updated));                     // Aggiorna il localStorage con la wishlist aggiornata, convertendo in stringa JSON
     };
 
     return (
         <>
-            <header className="container">
+                 <header className="container">
                 <nav className="navbar">
                     <div className="container-navbar">
                         <div className="button">
@@ -63,27 +66,43 @@ export default function Wishlist (){
                         ) : (
                             wishlist.map(product => (
                                 <div className="col-3" key={product.id}>
-                                    <div className="card">
-                                        <Link to={`/products/${product.id}`}>
-                                            <img
-                                                src={`http://localhost:3001/${product.image}`}
-                                                alt={product.name}
-                                                className="card-img-top"
-                                                style={{ width: "180px", height: "195px", objectFit: "cover", margin: "0 auto" }}
-                                            />
-                                        </Link>
-                                        <div className="card-body">
-                                            <h3 className="card-title">{product.title}</h3>
-                                            <p className="card-text" style={{fontSize:"17px", textAlign:"center"}}><spam style={{color:"#ff6543"}}>Categoria: </spam>{product.category}</p>
-                                            <p className="card-text" style={{fontSize:"17px", textAlign:"center"}}><spam style={{color:"#ff6543"}}>Prezzo:</spam> <strong>{product.price} €</strong></p>
+                                    <div className="card" style={{minHeight: "280px", border: "1px solid #ddd", borderRadius: "8px", padding: "20px", marginBottom: "20px"}}>
+                                        <div className="card-body text-center">
+                                            <Link to={`/products/${product.id}`} style={{textDecoration: "none"}}>
+                                                <h3 className="card-title" style={{color: "#333", marginBottom: "15px", fontWeight: "bold", fontSize: "30px"}}>
+                                                    {product.title}
+                                                </h3>
+                                            </Link>
+                                            
+                                            <p className="card-text" style={{fontSize:"17px", margin: "80px 20px"}}>
+                                                <span style={{color:"#ff6543", fontWeight: "bold"}}>Categoria: </span>
+                                                <span style={{color: "#666"}}>{product.category}</span>
+                                            </p>
+                                            <div style={{marginTop: "auto", paddingTop: "15px"}}>
                                                 <button
-                                                className="btn"
-                                                style={{ color: "#ff6543", background: "none", border: "none", fontSize: "1.5rem", marginBottom:"40px", textAlign:"center" }}
-                                                onClick={() => removeFromWishlist(product.id)}
-                                                title="Rimuovi dalla wishlist"
+                                                    className="btn"
+                                                    style={{ 
+                                                        color: "#ff6543", 
+                                                        background: "none", 
+                                                        border: "2px solid #ff6543", 
+                                                        borderRadius: "8px",
+                                                        padding: "8px 12px",
+                                                        transition: "all 0.3s ease"
+                                                    }}
+                                                    onClick={() => removeFromWishlist(product.id)}
+                                                    title="Rimuovi dalla wishlist"
+                                                    onMouseOver={(e) => {
+                                                        e.target.style.backgroundColor = "#ff6543";
+                                                        e.target.style.color = "white";
+                                                    }}
+                                                    onMouseOut={(e) => {
+                                                        e.target.style.backgroundColor = "transparent";
+                                                        e.target.style.color = "#ff6543";
+                                                    }}
                                                 >
-                                                    <FontAwesomeIcon icon={ faTrash} style={{textAlign:"center", color: "#ff6543", border:"1px solid #ff6543", padding:"3px 3px", borderRadius:"4px", backgroundColor:"white", marginTop:" 35px"}} />
+                                                    <FontAwesomeIcon icon={faTrash}  />
                                                 </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -9,53 +9,56 @@ import Footer from "../components/Footer";
 import Search from "../components/Search";
 
 export default function Shop (){
-    
-    const [products, setProducts] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([]);
-    const [searchParams] = useSearchParams();
-    const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "" );      //Memorizzare il testo digitato dall’utente nella barra di ricerca.
-    const [sortOrder, setSortOrder] = useState({ field: null, asc: true });           //Per mostarre i prodotti in ordine
-    const location = useLocation();                                              //Per non mostrare il tasto quando si trova in "/shop"
-    const [selectedCategory, setSelectedCategory] = useState(""); // "" = tutte, "Tablet" o "Smartphone"
+     
+    const [products, setProducts] = useState([]);                                    // Stato per memorizzare i prodotti
+    const [filteredProducts, setFilteredProducts] = useState([]);                    // Stato per memorizzare i prodotti filtrati in base alla ricerca
+    const [searchParams] = useSearchParams();                                        // Per gestire i parametri di ricerca nell'URL
+    const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "" );      // Memorizzare il testo digitato dall’utente nella barra di ricerca.
+    const [sortOrder, setSortOrder] = useState({ field: null, asc: true });          // Per mostarre i prodotti in ordine
+    const location = useLocation();                                                  // Per non mostrare il tasto quando si trova in "/shop"
+    const [selectedCategory, setSelectedCategory] = useState("");                    // Se
 
     
     useEffect(() => {
-        axios.get("http://localhost:3001/products")               // Fetch prodotti all'avvio
-            .then(res => setProducts(res.data))
+        axios.get("http://localhost:3001/products")
+            .then(res => {
+                console.log('Prodotti ricevuti:', res.data); // Debug
+                setProducts(res.data);
+            })
             .catch(err => console.error(err));
     }, []);
 
     useEffect(() => {
-        const brand = searchParams.get("brand");
-        if (brand) {
-            setFilteredProducts(
+        const brand = searchParams.get("brand");                        // Filtra i prodotti in base al parametro "brand" nella URL
+        if (brand) {                                                    // Se esiste il parametro "brand", filtra i prodotti
+            setFilteredProducts(                                        // Aggiorna i prodotti filtrati
                 products.filter(
-                    (product) => product.brand.toLowerCase() === brand.toLowerCase()
+                    (product) => product.brand === brand    //Confronta il brand del prodotto con il parametro "brand"
                 )
             );
         } else {
-            setFilteredProducts(products);
-        }
-    }, [products, searchParams]);
+            setFilteredProducts(products);                                  // Altrimenti, mostra tutti i prodotti
+        } 
+    }, [products, searchParams]);                                          // Eseguito quando cambiano "products" o "searchParams"
 
-    const handleSubmitSearch = (e) => {
+    const handleSubmitSearch = (e) => {                                    // Funzione per la ricerca
         e.preventDefault();
-        setFilteredProducts(
-            (products || []).filter(product =>
+        setFilteredProducts(                                              // Aggiorna i prodotti filtrati in base al termine di ricerca
+            (products || []).filter(product =>                            //Prodotti che includono il termine di ricerca
                 product.title.toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
     };
 
     const sortByTitle = () => {                                                  // Funzione per ordine per titolo
-        const asc = !(sortOrder.field === "title" && sortOrder.asc);
-        const sorted = [...filteredProducts].sort((a, b) => {
-            if (a.title.toLowerCase() < b.title.toLowerCase()) return asc ? -1 : 1;
-            if (a.title.toLowerCase() > b.title.toLowerCase()) return asc ? 1 : -1;
+        const asc = !(sortOrder.field === "title" && sortOrder.asc);             // Determina se l'ordinamento deve essere ascendente o discendente
+        const sorted = [...filteredProducts].sort((a, b) => {                    // Crea una copia dell'array e lo ordina
+            if (a.title.toLowerCase() < b.title.toLowerCase()) return asc ? -1 : 1;    
+            if (a.title.toLowerCase() > b.title.toLowerCase()) return asc ? 1 : -1;     
             return 0;
         });
-        setFilteredProducts(sorted);
-        setSortOrder({ field: "title", asc });
+        setFilteredProducts(sorted);                                             // Aggiorna i prodotti filtrati con l'array ordinato
+        setSortOrder({ field: "title", asc });                                   // Aggiorna lo stato dell'ordinamento
     };
 
     const sortByCategory = () => {                                           // Funzione per ordine per categoria
@@ -69,34 +72,41 @@ export default function Shop (){
         setSortOrder({ field: "category", asc });
     };
     const [wishlist, setWishlist] = useState(() => {                           // Recupera la wishlist dal localStorage se esiste
-        const saved = localStorage.getItem("wishlist");
-        return saved ? JSON.parse(saved) : [];
+        const saved = localStorage.getItem("wishlist");                        
+        return saved ? JSON.parse(saved) : [];                                 // Altrimenti ritorna con un array vuoto     
     });
- 
-    const toggleWishlist = (product) => {                             // Funzione toggle che aggiunge i prodotti nella wishlist
+    
+    const toggleWishlist = (product) => {
+        console.log('Prodotto da aggiungere alla wishlist:', product); 
+        console.log('Prezzo del prodotto:', product.price); 
+        
         let updated;
         if (wishlist.some(item => item.id === product.id)) {
             updated = wishlist.filter(item => item.id !== product.id);
         } else {
-        updated = [...wishlist, product];
+            const completeProduct = {
+                id: product.id,
+                title: product.title,
+                category: product.category,
+            };
+            console.log('Prodotto completo da salvare:', completeProduct); // Debug
+            updated = [...wishlist, completeProduct];
         }
         setWishlist(updated);
         localStorage.setItem("wishlist", JSON.stringify(updated));
     };
 
-    // Stato per la lista di confronto, sincronizzato con localStorage
-    const [compareList, setCompareList] = useState(() => {
+    
+    const [compareList, setCompareList] = useState(() => {                     // Stato per la lista di confronto, sincronizzato con localStorage
         const saved = localStorage.getItem("compareList");
         return saved ? JSON.parse(saved) : [];
     });
 
-    // Aggiorna localStorage quando compareList cambia
-    useEffect(() => {
+    useEffect(() => {                                                        // Aggiorna localStorage quando compareList cambia
         localStorage.setItem("compareList", JSON.stringify(compareList));
     }, [compareList]);
 
-    // Funzione toggle per aggiungere/rimuovere prodotti dalla lista di confronto
-    const toggleCompare = (product) => {
+    const toggleCompare = (product) => {                                     // Funzione toggle per aggiungere/rimuovere prodotti dalla lista di confronto
         let updated;
         if (compareList.some(item => item.id === product.id)) {
             updated = compareList.filter(item => item.id !== product.id);
@@ -105,6 +115,15 @@ export default function Shop (){
         }
         setCompareList(updated);
     };
+
+    const handleSearch = (term) => {                                    // Funzione per la ricerca con debounce
+        setFilteredProducts(
+            (products || []).filter(product =>
+                product.title.toLowerCase().includes(term.toLowerCase())
+            )
+        );
+    };
+    
 
     return (
         <>
@@ -123,7 +142,8 @@ export default function Shop (){
                 <Search
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
-                    onSubmit={handleSubmitSearch} 
+                    onSubmit={handleSubmitSearch}
+                    onSearch={handleSearch}
                 />
                 <div className="d-flex flex-md-row-reverse flex-grow-1 gap-3 col-12 col-sm-2 justify-content-center justify-content-md-start align-items-center">
                     <div className="buttons d-flex gap-3">
@@ -136,7 +156,7 @@ export default function Shop (){
             <main>
             <div className="container-card">
                 <div className="row">
-                    <div className="col-12">
+                    <div className="col-12" style={{margin:"5px 100px 20px 410px"}}>
                         <div className="row-table" style={{display: "flex", flexDirection:"row", justifyContent:"space-evenly", width:"100%"}}>
                             <div className="col-12">
                                 {location.pathname !== "/shop" && (
@@ -211,42 +231,120 @@ export default function Shop (){
                                     <div className="col-3" 
                                         key={product.id}
                                         style={{
-                                            minWidth: filteredProducts.length <= 2 ? "320px" : "220px",
                                             maxWidth: "350px",
                                             flex: "1 1 320px",
                                             margin: "20px"
                                         }}>
-                                        <div className="card">
-                                            <Link to={`/products/${product.id}`}>
-                                                <img 
-                                                    src={`http://localhost:3001/${product.image}`}
-                                                    style={{maxWidth: "100%", maxHeight:"100%", alignItems:"center"}}  
-                                                    alt={product.name} 
-                                                    className="image-top"
-                                                />
-                                            </Link>
-                                            <div className="card-body">
-                                                <h2 className="card-title">{product.title}</h2>
-                                                <h5 className="card-text">{product.category}</h5>
-                                                <div className="button-click" style={{textAlign:"left"}}>
-                                                    <Link className="mt-2"  style={{ marginLeft:"30px"}}>
-                                                        <FontAwesomeIcon className="fs-4" style={{ color: "#ff6543", border:"1px solid #ff6543", padding:"5px 5px", borderRadius:"4px", backgroundColor:"white", margin:"50px 0"}} icon={faHeart} onClick={() => toggleWishlist(product)} />
+                                        <div className="card" style={{
+                                            height: "300px",
+                                            border: "1px solid #ddd",
+                                            borderRadius: "8px",
+                                            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                                            transition: "transform 0.2s",
+                                            display: "flex",
+                                            flexDirection: "column"
+                                        }}>
+                                            <div className="card-header" style={{
+                                                backgroundColor: "#f8f9fa",
+                                                borderBottom: "1px solid #dee2e6",
+                                                padding: "15px",
+                                                borderRadius: "8px 8px 0 0"
+                                            }}>
+                                                <div className="badge" style={{
+                                                    backgroundColor: "#ff6543",
+                                                    color: "white",
+                                                    padding: "4px 8px",
+                                                    borderRadius: "4px",
+                                                    fontSize: "12px",
+                                                    fontWeight: "bold"
+                                                }}>
+                                                    {product.category}
+                                                </div>
+                                            </div>
+                                            <div className="card-body" style={{
+                                                padding: "20px",
+                                                flex: "1",
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                justifyContent: "space-between"
+                                            }}>
+                                                <div>
+                                                    <Link to={`/products/${product.id}`} style={{ textDecoration: "none" }}>
+                                                        <h2 className="card-title" style={{
+                                                            fontSize: "28px",
+                                                            fontWeight: "bold",
+                                                            color: "#333",
+                                                            marginBottom: "10px",
+                                                            lineHeight: "1.2"
+                                                        }}>
+                                                            {product.title}
+                                                        </h2>
                                                     </Link>
-                                                    <span className="mt-2" style={{ marginLeft:"5px", cursor: "pointer" }}>
+                                                    <p style={{
+                                                        color: "#666",
+                                                        fontSize: "14px",
+                                                        marginBottom: "15px"
+                                                    }}>
+                                                        {product.brand}
+                                                    </p>
+                                                    {product.price && (
+                                                        <div style={{
+                                                            fontSize: "20px",
+                                                            fontWeight: "bold",
+                                                            color: "#ff6543",
+                                                            marginBottom: "15px"
+                                                        }}>
+                                                            €{product.price}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="button-click" style={{
+                                                    display: "flex",
+                                                    justifyContent: "center",
+                                                    gap: "10px",
+                                                    borderTop: "1px solid #eee",
+                                                    paddingTop: "15px"
+                                                }}>
+                                                    <button
+                                                        onClick={() => toggleWishlist(product)}
+                                                        style={{
+                                                            border: "none",
+                                                            background: "transparent",
+                                                            cursor: "pointer"
+                                                        }}
+                                                    >
+                                                        <FontAwesomeIcon 
+                                                            className="fs-4" 
+                                                            style={{ 
+                                                                color: wishlist.some(item => item.id === product.id) ? "#ff6543" : "#ccc",
+                                                                border: "1px solid #ff6543", 
+                                                                padding: "8px", 
+                                                                borderRadius: "6px", 
+                                                                backgroundColor: "white"
+                                                            }} 
+                                                            icon={faHeart} 
+                                                        />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => toggleCompare(product)}
+                                                        style={{
+                                                            border: "none",
+                                                            background: "transparent",
+                                                            cursor: "pointer"
+                                                        }}
+                                                    >
                                                         <FontAwesomeIcon
                                                             className="fs-4"
                                                             style={{
                                                                 color: compareList.some(item => item.id === product.id) ? "green" : "hsla(113, 90%, 72%, 1.00)",
                                                                 border: "1px solid hsla(113, 90%, 72%, 1.00)",
-                                                                padding: "5px 5px",
-                                                                borderRadius: "4px",
-                                                                backgroundColor: compareList.some(item => item.id === product.id) ? "#eaffea" : "white",
-                                                                margin: "50px 0"
+                                                                padding: "8px",
+                                                                borderRadius: "6px",
+                                                                backgroundColor: compareList.some(item => item.id === product.id) ? "#eaffea" : "white"
                                                             }}
                                                             icon={faCircleCheck}
-                                                            onClick={() => toggleCompare(product)}
                                                         />
-                                                    </span>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>

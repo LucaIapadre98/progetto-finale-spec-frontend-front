@@ -5,13 +5,19 @@ import Search from "../components/Search";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Footer from "../components/Footer";
+import { useCompare } from "../context/CompareContext";
 
 
-export default function Compare (){
+
+export default function Compare () {
     const [compareList, setCompareList] = useState([]);
     const [searchParams] = useSearchParams();
-    const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "" );      //Memorizzare il testo digitato dall’utente nella barra di ricerca.
+    const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "" );            //Memorizzare il testo digitato dall’utente nella barra di ricerca.
+    const [products] = useState([]);                                               // Stato per tutti i prodotti
 
+   
+    
+      
     useEffect(() => {
         const saved = localStorage.getItem("compareList");                                 // Recupera la lista di confronto dal localStorage
         setCompareList(saved ? JSON.parse(saved) : []);                                    // Imposta lo stato con la lista recuperata o un array vuoto se non esiste
@@ -32,9 +38,9 @@ export default function Compare (){
     const handleSubmitSearch = (e) => {                                                                // Funzione per gestire la ricerca dei prodotti
         e.preventDefault();                                                                            // Previene il comportamento predefinito del form
         setFilteredProducts(                                                                          // Aggiorna lo stato dei prodotti filtrati
-            (products || []).filter(product =>
-                product.title.toLowerCase().includes(searchTerm.toLowerCase())
-            )
+            (products || []).filter(product =>                                                       // Filtra i prodotti in base al termine di ricerca
+                product.title.toLowerCase().includes(searchTerm.toLowerCase())                    // Confronta i titoli se includono il termine di ricerca
+            ) 
         );
     };
  
@@ -60,11 +66,11 @@ export default function Compare (){
                 <div className="container-link">
                     <MenuLink />
                 </div>
-                {/* <Search
+                <Search
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
                     onSubmit={handleSubmitSearch} 
-                /> */}
+                />
                 <div className="d-flex flex-md-row-reverse flex-grow-1 gap-3 col-12 col-sm-2 justify-content-center justify-content-md-start align-items-center">
                     <div className="buttons d-flex gap-3">
                         <Link className="position-relative mt-2" to={`/wishlist`}>
@@ -90,24 +96,90 @@ export default function Compare (){
                     <div className="row align-items-stretch">
                             {compareList.map(product => (
                                 <div className="col-3 d-flex h-100" key={product.id}>
-                                    <div className="card  h-100 d-flex flex-column" style={{border:"1px solid rgb(238, 237, 237)", margin:"5px 10px"}}>
-                                        <Link to={`/products/${product.id}`}>
-                                            <img
-                                                src={`http://localhost:3001/${product.image}`}
-                                                alt={product.name}
-                                                className="card-img-top"
-                                                style={{ width: "180px", height: "195px", objectFit: "cover", margin: "0 auto" }}
-                                            />
-                                        </Link>
-                                        <div className="card-compare-body d-flex flex-column flex-grow-1">
-                                            <h3 className="card-title">{product.title}</h3>
-                                            <p className="card-text"><span style={{fontWeight:"bold", color:"#ff6543"}}>Categoria:</span> {product.category}</p>
-                                            <p className="card-text"><span style={{fontWeight:"bold",color:"#ff6543"}}>Brand:</span> {product.brand}</p>
-                                            <p className="card-text"><span style={{fontWeight:"bold", color:"#ff6543"}}>Prezzo:</span> €{product.price.toFixed(2)}</p>
-                                            <p className="card-description" style={{margin:"5px 50px"}}><span style={{fontWeight:"bold", color:"#ff6543"}}>Descrizione:</span> {product.description}</p>
-                                            <button onClick={() => removeFromCompare(product.id)} className="btn btn-danger" style={{textDecoration:"none",background:"white", border:"1px solid #ff6543", display:"inline-block", padding:"5px 10px", borderRadius:"4px", color:"#ff6543", margin:" 20px 10px"}}>
-                                                <FontAwesomeIcon icon={faTrash} />
-                                            </button>
+                                    <div className="card h-100 d-flex flex-column" style={{
+                                        height: "300px",
+                                        border: "1px solid #ddd",
+                                        borderRadius: "8px",
+                                        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                                        transition: "transform 0.2s",
+                                        margin: "5px 10px"
+                                    }}>
+                                        <div className="card-header" style={{
+                                            backgroundColor: "#f8f9fa",
+                                            borderBottom: "1px solid #dee2e6",
+                                            padding: "15px",
+                                            borderRadius: "8px 8px 0 0"
+                                        }}>
+                                            <div className="badge" style={{
+                                                backgroundColor: "#ff6543",
+                                                color: "white",
+                                                padding: "4px 8px",
+                                                borderRadius: "4px",
+                                                fontSize: "12px",
+                                                fontWeight: "bold"
+                                            }}>
+                                                {product.category}
+                                            </div>
+                                        </div>
+                                        <div className="card-body" style={{
+                                            padding: "20px",
+                                            flex: "1",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            justifyContent: "space-between"
+                                        }}>
+                                            <div>
+                                                <Link to={`/products/${product.id}`} style={{ textDecoration: "none" }}>
+                                                    <h3 className="card-title" style={{
+                                                        fontSize: "18px",
+                                                        fontWeight: "bold",
+                                                        color: "#333",
+                                                        marginBottom: "10px",
+                                                        lineHeight: "1.2"
+                                                    }}>
+                                                        {product.title}
+                                                    </h3>
+                                                </Link>
+                                                <p style={{
+                                                    color: "#666",
+                                                    fontSize: "14px",
+                                                    marginBottom: "15px"
+                                                    
+                                                }}></p>
+                                                <p style={{
+                                                    fontSize: "16px",
+                                                    textAlign: "center",
+                                                }}>
+                                                    {product.category}
+                                                </p>
+                                            </div>
+                                            <div style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                borderTop: "1px solid #eee",
+                                                paddingTop: "15px"
+                                            }}>
+                                                <button 
+                                                    onClick={() => removeFromCompare(product.id)}
+                                                    style={{
+                                                        border: "1px solid #ff6543",
+                                                        background: "white",
+                                                        color: "#ff6543",
+                                                        padding: "8px 15px",
+                                                        borderRadius: "6px",
+                                                        cursor: "pointer",
+                                                        fontSize: "14px",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: "5px"
+                                                    }}
+                                                >
+                                                    <FontAwesomeIcon icon={faTrash} />
+                                                    
+                                                </button>
+                                                
+                                            </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -120,35 +192,3 @@ export default function Compare (){
     );
 };
 
-//  <div className="container my-5"style={{display:"block", justifyContent:"center", alignItems:"center"}}>
-//                     <div className="title" style={{textAlign:"center", marginBottom:"60px"}}>
-//                         <h2 className="text-center" style={{fontSize:" 40px", color:"#ff6543"}}>Confronto prodotti</h2>
-//                     </div>
-//                     <div className="row justify-content-center ">
-//                         {compareList.map(product => (
-//                             <div className="col-md-4 d-flex h-100" key={product.id}>
-//                                 <div className="card mb-4 h-100" 
-//                                     style={{
-//                                         border:"1px solid rgb(238, 237, 237)", 
-//                                         margin:"5px 25px", 
-//                                         display:"flex", 
-//                                         flexDirection:"column", 
-                                        
-//                                     }}
-//                                 >
-//                                     <Link to={`/products/${product.id}`}>
-//                                     <img
-//                                         src={`http://localhost:3001/${product.image}`}
-//                                         className="card-img-top"
-//                                         alt={product.title}
-//                                         style={{ maxHeight: "200px", objectFit: "contain" }}
-//                                     />
-//                                     </Link>
-//                                     <div className="card-body d-flex flex-column flex-grow-1">
-//        
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                         ))}
-//                     </div>
-//                 </div>

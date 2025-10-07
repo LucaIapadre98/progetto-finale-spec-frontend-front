@@ -5,43 +5,43 @@ import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
-import appleImg from "../public/brand/Apple.jpg";
-import fairphoneImg from "../public/brand/fairphone.jpg";
-import googleImg from "../public/brand/google-2.jpg";
-import huaweiImg from"../public/brand/huawei.jpg";
-import onePlusImg from "../public/brand/OnePlus.jpg";
-import samsungImg from "../public/brand/samsung.jpg";
-import xiaomiImg from "../public/brand/Xiaomi.jpg";
-import SmartphoneImg from "../public/brand/smart-2.jpg";
-import TabletImg from "../public/brand/tablet.jpg";
+import appleImg from "../brands/apple.jpg";
+import fairphoneImg from "../brands/fairphone.jpg";
+import googleImg from "../brands/google-2.jpg";
+import huaweiImg from "../brands/huawei.jpg";
+import onePlusImg from "../brands/OnePlus.jpg";
+import samsungImg from "../brands/samsung.jpg";
+import xiaomiImg from "../brands/Xiaomi.jpg";
+import SmartphoneImg from "../brands/smart-2.jpg";
+import TabletImg from "../brands/tablet.jpg";
 import Footer from "../components/Footer";
 
 export default function Homepage(){
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();                            // Per gestire i parametri di ricerca nell'URL
     // const navigate = useNavigate();
-    const [searchTerm] = useState(searchParams.get("q") || "" );
-    const [products, setProducts] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [searchTerm] = useState(searchParams.get("q") || "" );                          // Memorizzare il testo digitato dall’utente nella barra di ricerca.
+    const [products, setProducts] = useState([]);                                         // Stato per memorizzare i prodotti
+    const [filteredProducts, setFilteredProducts] = useState([]);                         // Stato per memorizzare i prodotti filtrati in base alla ricerca
     
 
     
     useEffect(() => {
-        axios.get("http://localhost:3001/products")    // Fetch prodotti all'avvio
+        axios.get("http://localhost:3001/products")                                         // Fetch prodotti all'avvio
             .then(res => setProducts(res.data))
             .catch(err => console.error(err));
     }, []);
 
-    useEffect(() => {        // Filtra prodotti quando cambia searchTerm o products
-        if (!searchTerm) {
-            setFilteredProducts(products);
+    useEffect(() => {                                                                      // Filtra prodotti quando cambia searchTerm o products
+        if (!searchTerm) {                                                                 // Se searchTerm è vuoto, mostra tutti i prodotti
+            setFilteredProducts(products);                                                 // Imposta filteredProducts con tutti i prodotti
         } else {
             setFilteredProducts(
-                products.filter(product =>
-                    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-                )
+              products.filter(product =>                                                // Filtra i prodotti in base al termine di ricerca
+                product.name.toLowerCase().includes(searchTerm.toLowerCase())           // Confronta i nomi se includono il termine di ricerca
+              )
             );
-        }
-    }, [searchTerm, products]);
+        } 
+    }, [searchTerm, products]);                                                         // Dipendenze: esegui quando searchTerm o products cambiano
   
     return (
         <>
@@ -115,40 +115,50 @@ export default function Homepage(){
               </div>
             </div>
           </main>
-            <div className="brands">
+            <div className="brands" style={{
+              display:"flex", 
+              flexDirection:"column", 
+              alignItems:"center", 
+              justifyContent:"center",
+              fontSize:"30px",
+              color:"#ff6543",
+            }}>
+              <div className="title-brand">
+                <h2>Tutti i brand che puoi trovare nel nostro negozio:</h2>
+              </div>
               <div className="row-brand">
                 <div className="col-1">
-                  <Link to="/shop?brand=Apple" className="card-brand border">
+                  <Link className="card-brand border">
                     <img src={appleImg} alt="Apple"  />
                   </Link>
                 </div>
                 <div className="col-1">
-                  <Link to="/shop?brand=Fairphone" className="card-brand border">
+                  <Link className="card-brand border">
                     <img src={fairphoneImg} alt="Fairphone" />
                   </Link>
                 </div>
                 <div className="col-1">
-                  <Link to="/shop?brand=Google" className="card-brand border">
+                  <Link className="card-brand border">
                     <img src={googleImg} alt="Google" />
                   </Link>
                 </div>
                 <div className="col-1">
-                  <Link to="/shop?brand=Huawei" className="card-brand border">
+                  <Link className="card-brand border">
                     <img src={huaweiImg} alt="Huawei" />
                   </Link>
                 </div>
                 <div className="col-1">
-                  <Link to="/shop?brand=OnePlus" className="card-brand border">
+                  <Link className="card-brand border">
                     <img src={onePlusImg} alt="OnePlus" />
                   </Link>
                 </div>
                 <div className="col-1">
-                  <Link to="/shop?brand=Samsung" className="card-brand border">
+                  <Link className="card-brand border">
                     <img src={samsungImg}alt="Samsung" />
                   </Link>
                 </div>
                 <div className="col-1">
-                  <Link to="/shop?brand=Xiaomi" className="card-brand border">
+                  <Link className="card-brand border">
                     <img src={xiaomiImg} alt="Xiaomi" />
                   </Link>
                 </div>
