@@ -177,36 +177,19 @@ export default function Shop (){
                             </div>
                             <div className="col-12">
                                 <button
-                                    className={`btn ${selectedCategory === "" ? "btn-primary" : "btn-outline-primary"}`} style={{
-                                        padding:"6px 11px", 
-                                        color: "rgb(103, 103, 255)", 
-                                        backgroundColor: "white",
-                                        border:"1px solid rgb(103, 103, 255)",
-                                        marginLeft:"20px"
-                                    }}
+                                    className={`btn ${selectedCategory === "" ? "btn-primary" : "btn-outline-primary"}`} 
                                     onClick={() => setSelectedCategory("")}
                                 >
                                     Tutti
                                 </button>
                                 <button
-                                    className={`btn ${selectedCategory === "Tablet" ? "btn-primary" : "btn-outline-primary"}`} style={{
-                                        margin:"5px 5px ",
-                                        padding:"6px 11px", 
-                                        color: "rgb(103, 103, 255)", 
-                                        backgroundColor: "white",
-                                        border:"1px solid rgb(103, 103, 255)"
-                                    }}
+                                    className={`btn ${selectedCategory === "Tablet" ? "btn-primary" : "btn-outline-primary"}`}
                                     onClick={() => setSelectedCategory("Tablet")}
                                 >
                                     Solo Tablet
                                 </button>
                                 <button 
-                                    className={`btn ${selectedCategory === "Smartphone" ? "btn-primary" : "btn-outline-primary"}`} style={{
-                                        padding:"6px 11px", 
-                                        color: "rgb(103, 103, 255)", 
-                                        backgroundColor: "white",
-                                        border:"1px solid rgb(103, 103, 255)"
-                                    }}
+                                    className={`btn ${selectedCategory === "Smartphone" ? "btn-primary" : "btn-outline-primary"}`}
                                     onClick={() => setSelectedCategory("Smartphone")}
                                 >
                                     Solo Smartphone
@@ -235,39 +218,13 @@ export default function Shop (){
                                             flex: "1 1 320px",
                                             margin: "20px"
                                         }}>
-                                        <div className="card" style={{
-                                            height: "300px",
-                                            border: "1px solid #ddd",
-                                            borderRadius: "8px",
-                                            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                                            transition: "transform 0.2s",
-                                            display: "flex",
-                                            flexDirection: "column"
-                                        }}>
-                                            <div className="card-header" style={{
-                                                backgroundColor: "#f8f9fa",
-                                                borderBottom: "1px solid #dee2e6",
-                                                padding: "15px",
-                                                borderRadius: "8px 8px 0 0"
-                                            }}>
-                                                <div className="badge" style={{
-                                                    backgroundColor: "#ff6543",
-                                                    color: "white",
-                                                    padding: "4px 8px",
-                                                    borderRadius: "4px",
-                                                    fontSize: "12px",
-                                                    fontWeight: "bold"
-                                                }}>
+                                        <div className="card">
+                                            <div className="card-header">
+                                                <div className="badge">
                                                     {product.category}
                                                 </div>
                                             </div>
-                                            <div className="card-body" style={{
-                                                padding: "20px",
-                                                flex: "1",
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                justifyContent: "space-between"
-                                            }}>
+                                            <div className="card-body">
                                                 <div>
                                                     <Link to={`/products/${product.id}`} style={{ textDecoration: "none" }}>
                                                         <h2 className="card-title" style={{
@@ -298,13 +255,7 @@ export default function Shop (){
                                                         </div>
                                                     )}
                                                 </div>
-                                                <div className="button-click" style={{
-                                                    display: "flex",
-                                                    justifyContent: "center",
-                                                    gap: "10px",
-                                                    borderTop: "1px solid #eee",
-                                                    paddingTop: "15px"
-                                                }}>
+                                                <div className="button-click">
                                                     <button
                                                         onClick={() => toggleWishlist(product)}
                                                         style={{
@@ -315,13 +266,7 @@ export default function Shop (){
                                                     >
                                                         <FontAwesomeIcon 
                                                             className="fs-4" 
-                                                            style={{ 
-                                                                color: wishlist.some(item => item.id === product.id) ? "#ff6543" : "#ccc",
-                                                                border: "1px solid #ff6543", 
-                                                                padding: "8px", 
-                                                                borderRadius: "6px", 
-                                                                backgroundColor: "white"
-                                                            }} 
+                                                            style={{color: wishlist.some(item => item.id === product.id) ? "#ff6543" : "#ccc"}} 
                                                             icon={faHeart} 
                                                         />
                                                     </button>
@@ -337,9 +282,6 @@ export default function Shop (){
                                                             className="fs-4"
                                                             style={{
                                                                 color: compareList.some(item => item.id === product.id) ? "green" : "hsla(113, 90%, 72%, 1.00)",
-                                                                border: "1px solid hsla(113, 90%, 72%, 1.00)",
-                                                                padding: "8px",
-                                                                borderRadius: "6px",
                                                                 backgroundColor: compareList.some(item => item.id === product.id) ? "#eaffea" : "white"
                                                             }}
                                                             icon={faCircleCheck}

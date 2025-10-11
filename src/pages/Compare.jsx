@@ -14,10 +14,7 @@ export default function Compare () {
     const [searchParams] = useSearchParams();
     const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "" );            //Memorizzare il testo digitato dall’utente nella barra di ricerca.
     const [products] = useState([]);                                               // Stato per tutti i prodotti
-
    
-    
-      
     useEffect(() => {
         const saved = localStorage.getItem("compareList");                                 // Recupera la lista di confronto dal localStorage
         setCompareList(saved ? JSON.parse(saved) : []);                                    // Imposta lo stato con la lista recuperata o un array vuoto se non esiste
@@ -50,7 +47,6 @@ export default function Compare () {
         localStorage.setItem("compareList", JSON.stringify(updatedList));                     // Aggiorna il localStorage per mantenere i dati persistenti
     };
     
-
 
     return (
         <>
@@ -96,47 +92,16 @@ export default function Compare () {
                     <div className="row align-items-stretch">
                             {compareList.map(product => (
                                 <div className="col-3 d-flex h-100" key={product.id}>
-                                    <div className="card h-100 d-flex flex-column" style={{
-                                        height: "300px",
-                                        border: "1px solid #ddd",
-                                        borderRadius: "8px",
-                                        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                                        transition: "transform 0.2s",
-                                        margin: "5px 10px"
-                                    }}>
-                                        <div className="card-header" style={{
-                                            backgroundColor: "#f8f9fa",
-                                            borderBottom: "1px solid #dee2e6",
-                                            padding: "15px",
-                                            borderRadius: "8px 8px 0 0"
-                                        }}>
-                                            <div className="badge" style={{
-                                                backgroundColor: "#ff6543",
-                                                color: "white",
-                                                padding: "4px 8px",
-                                                borderRadius: "4px",
-                                                fontSize: "12px",
-                                                fontWeight: "bold"
-                                            }}>
+                                    <div className="card h-100 d-flex flex-column">
+                                        <div className="card-header" >
+                                            <div className="badge" >
                                                 {product.category}
                                             </div>
                                         </div>
-                                        <div className="card-body" style={{
-                                            padding: "20px",
-                                            flex: "1",
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            justifyContent: "space-between"
-                                        }}>
+                                        <div className="card-body">
                                             <div>
                                                 <Link to={`/products/${product.id}`} style={{ textDecoration: "none" }}>
-                                                    <h3 className="card-title" style={{
-                                                        fontSize: "18px",
-                                                        fontWeight: "bold",
-                                                        color: "#333",
-                                                        marginBottom: "10px",
-                                                        lineHeight: "1.2"
-                                                    }}>
+                                                    <h3 className="card-title">
                                                         {product.title}
                                                     </h3>
                                                 </Link>
@@ -161,25 +126,10 @@ export default function Compare () {
                                             }}>
                                                 <button 
                                                     onClick={() => removeFromCompare(product.id)}
-                                                    style={{
-                                                        border: "1px solid #ff6543",
-                                                        background: "white",
-                                                        color: "#ff6543",
-                                                        padding: "8px 15px",
-                                                        borderRadius: "6px",
-                                                        cursor: "pointer",
-                                                        fontSize: "14px",
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        gap: "5px"
-                                                    }}
                                                 >
                                                     <FontAwesomeIcon icon={faTrash} />
-                                                    
-                                                </button>
-                                                
+                                                </button> 
                                             </div>
-                                            
                                         </div>
                                     </div>
                                 </div>

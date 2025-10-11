@@ -115,16 +115,9 @@ export default function Homepage(){
               </div>
             </div>
           </main>
-            <div className="brands" style={{
-              display:"flex", 
-              flexDirection:"column", 
-              alignItems:"center", 
-              justifyContent:"center",
-              fontSize:"30px",
-              color:"#ff6543",
-            }}>
+            <div className="brands">
               <div className="title-brand">
-                <h2>Tutti i brand che puoi trovare nel nostro negozio:</h2>
+                <h2 style={{ color: "#ff6543" }}>Tutti i brand che puoi trovare nel nostro negozio:</h2>
               </div>
               <div className="row-brand">
                 <div className="col-1">

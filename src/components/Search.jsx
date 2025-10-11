@@ -3,24 +3,24 @@ import {faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 
 
-export default function Search({searchTerm, setSearchTerm, onSubmit, onSearch}) {                    // Componente di ricerca che riceve lo stato e la funzione di aggiornamento come props
+export default function Search({searchTerm, setSearchTerm, onSubmit, onSearch}) {            // Componente di ricerca che riceve lo stato e la funzione di aggiornamento come props
     const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
 
     
-    useEffect(() => {
+    useEffect(() => {                                                                        // UseEffect per sincronizzare lo stato locale con la prop searchTerm
         setLocalSearchTerm(searchTerm);
-    }, [searchTerm]);
+    }, [searchTerm]);                                                                        // Eseguito ogni volta che searchTerm cambia
 
-    const handleClick = () => {
-        setSearchTerm(localSearchTerm);
-        if (onSearch) {
+    const handleClick = () => {                                                           // Funzione per gestire il click sul pulsante di ricerca
+        setSearchTerm(localSearchTerm); 
+        if (onSearch) {                                                                   // Se è stata passata una funzione onSearch, chiamala con il termine di ricerca locale
             onSearch(localSearchTerm);
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e) => {                                                      // Funzione per gestire l'invio del form
         e.preventDefault();
-        handleClick();
+        handleClick();                                                                 // Chiama handleClick per aggiornare lo stato e chiamare onSearch
         if (onSubmit) {
             onSubmit(e);
         }

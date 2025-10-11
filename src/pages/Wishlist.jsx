@@ -7,11 +7,8 @@ import Footer from "../components/Footer";
 
 export default function Wishlist (){
 
-    const [wishlist, setWishlist] = useState([]);                                              // Stato per la wishlist                                               
+    const [wishlist, setWishlist] = useState([]);                                         // Stato per la wishlist                                               
     
-
-
-
     useEffect(() => {
         const saved = localStorage.getItem("wishlist");                                  // Recupera la wishlist dal localStorage se esiste
         setWishlist(saved ? JSON.parse(saved) : []);                                     // Altrimenti ritorna con un array vuoto, converte in oggetto JS
@@ -25,7 +22,7 @@ export default function Wishlist (){
 
     return (
         <>
-                 <header className="container">
+            <header className="container">
                 <nav className="navbar">
                     <div className="container-navbar">
                         <div className="button">

@@ -91,56 +91,21 @@ export default function Details (){
                 <div className="row" style={{width:"100%", display:"flex", justifyContent:"center"}}>
                     {product ? (
                         <div className="col-12 col-md-6" style={{ maxWidth: "500px" }}>
-                            <div className="card" style={{
-                                height: "auto",
-                                border: "1px solid #ddd",
-                                borderRadius: "8px",
-                                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                                transition: "transform 0.2s"
-                            }}>
-                                <div className="card-header" style={{
-                                    backgroundColor: "#f8f9fa",
-                                    borderBottom: "1px solid #dee2e6",
-                                    padding: "15px",
-                                    borderRadius: "8px 8px 0 0",
-                                    textAlign: "center"
-                                }}>
-                                    <div className="badge" style={{
-                                        backgroundColor: "#ff6543",
-                                        color: "white",
-                                        padding: "8px 16px",
-                                        borderRadius: "4px",
-                                        fontSize: "16px",
-                                        fontWeight: "bold"
-                                    }}>
+                            <div className="card">
+                                <div className="card-header">
+                                    <div className="badge">
                                         {product.category}
                                     </div>
                                 </div>
-                                <div className="card-body" style={{
-                                    padding: "30px",
-                                    display: "flex",
-                                    flexDirection: "column"
-                                }}>
+                                <div className="card-body">
                                     <div style={{ marginBottom: "20px" }}>
-                                        <h2 style={{
-                                            fontSize: "40px",
-                                            fontWeight: "bold",
-                                            color: "#333",
-                                            marginBottom: "15px",
-                                            textAlign: "center"
-                                        }}>
+                                        <h2>
                                             {product.title}
                                         </h2>
-                                        <p style={{
-                                            color: "#666",
-                                            fontSize: "18px",
-                                            marginBottom: "20px",
-                                            textAlign: "center"
-                                        }}>
+                                        <p>
                                             {product.brand}
                                         </p>
                                     </div>
-                                    
                                     <div style={{ marginBottom: "20px" }}>
                                         <div style={{
                                             borderTop: "1px solid #eee",
@@ -217,17 +182,8 @@ export default function Details (){
                                         <button 
                                             onClick={() => toggleWishlist(product)}
                                             style={{
-                                                border: "1px solid #ff6543",
-                                                background: wishlist.some(item => item.id === product.id) ? "#ff6543" : "white",
-                                                color: wishlist.some(item => item.id === product.id) ? "white" : "#ff6543",
-                                                padding: "12px 20px",
-                                                borderRadius: "6px",
-                                                cursor: "pointer",
-                                                fontSize: "16px",
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: "8px",
-                                                transition: "all 0.3s"
+                                                color: wishlist.some(item => item.id === product.id) ? "#ff6543" : "#ccc",
+                                                backgroundColor: "white"
                                             }}
                                         >
                                             <FontAwesomeIcon icon={faHeart} />
