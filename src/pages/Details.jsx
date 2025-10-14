@@ -1,8 +1,8 @@
 import MenuLink from "../components/MenuLink"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart} from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect } from "react";
-import { useSearchParams, Link, useParams } from "react-router-dom";
+import { useState, useEffect, use } from "react";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import Footer from "../components/Footer";
 
@@ -22,25 +22,32 @@ export default function Details (){
        );
     }, [searchTerm, products]);
 
-
-    const fetchProduct = () => {
-        axios.get(`http://localhost:3001/products/${id}`)
-            .then((res) => {
-                const { product } = res.data;
-                setProduct(product);
-            })
-            .catch(err => {
-                console.error('Errore nel caricamento del prodotto:', err);
-            });
+    const fetchProduct = async () => {
+        try {
+            const res = await axios.get(`http://localhost:3001/products/${id}`);
+            const { product } = res.data;
+            console.log("prodotto:", product);
+            setProduct(product);
+        } catch (err) {
+            console.error('Errore nel caricamento del prodotto:', err);
+        }
     };
-    useEffect(fetchProduct, [id]);                                      // Esegui fetchProduct quando l'id cambia
-   
-    
-    
+
     useEffect(() => {
-        axios.get("http://localhost:3001/products")                      // Fetch prodotti all'avvio
-            .then(res => setProducts(res.data))                          // Imposta i prodotti con i dati ricevuti
-            .catch(err => console.error(err));
+        fetchProduct();
+    }, [id]);    
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const res = await fetch("http://localhost:3001/products");
+                const data = await res.json();
+                setProducts(data);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchProducts();
     }, []);
 
     const [wishlist, setWishlist] = useState(() => {                           // Recupera la wishlist dal localStorage se esiste
@@ -48,7 +55,7 @@ export default function Details (){
         return saved ? JSON.parse(saved) : [];                                 // Altrimenti ritorna con un array vuoto, converte in oggetto JS
     });
 
-    const toggleWishlist = (product) => {                               // Funzione toggle che aggiunge i prodotti nella wishlist
+    const toggleWishlist = (product) => {                                 // Funzione toggle che aggiunge i prodotti nella wishlist
         let updated;
         if (wishlist.some(item => item.id === product.id)) {                 // Controlla se il prodotto è già nella wishlist
             updated = wishlist.filter(item => item.id !== product.id);       // Se è presente, rimuovilo
@@ -59,6 +66,7 @@ export default function Details (){
         localStorage.setItem("wishlist", JSON.stringify(updated));           // Aggiorna il localStorage con la wishlist aggiornata, convertendo in stringa JSON
     };
 
+    
     return (
         <>
         <header className="container">
@@ -87,7 +95,7 @@ export default function Details (){
                     <p>Torna allo shop</p>
                 </Link>
             </div>
-            <div className="container-card" style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
+            <div className="container-card" style={{ display: "flex", justifyContent: "center", padding: "10px" }}>
                 <div className="row" style={{width:"100%", display:"flex", justifyContent:"center"}}>
                     {product ? (
                         <div className="col-12 col-md-6" style={{ maxWidth: "500px" }}>
@@ -98,13 +106,34 @@ export default function Details (){
                                     </div>
                                 </div>
                                 <div className="card-body">
-                                    <div style={{ marginBottom: "20px" }}>
+                                    <div style={{ marginBottom: "10px" }}>
                                         <h2>
                                             {product.title}
                                         </h2>
-                                        <p>
+                                        <p style={{ fontSize:" 22px"}}>
                                             {product.brand}
                                         </p>
+                                        <div style={{
+                                            width: "100%",
+                                            height: "300px",
+                                            marginBottom: "20px",   
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            overflow: "hidden",
+                                            borderRadius: "8px",
+                                            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
+                                        }}>
+                                            <img
+                                                src={`/image${product.image}`}  // Rimuovi lo slash qui anche
+                                                alt={product.title}
+                                                style={{
+                                                    maxWidth: "100%",
+                                                    maxHeight: "100%",  
+                                                    objectFit: "contain"
+                                                }}
+                                            />
+                                        </div>
                                     </div>
                                     <div style={{ marginBottom: "20px" }}>
                                         <div style={{

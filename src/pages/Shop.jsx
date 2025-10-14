@@ -8,8 +8,7 @@ import axios from "axios";
 import Footer from "../components/Footer";
 import Search from "../components/Search";
 
-export default function Shop (){
-     
+export default function Shop (){                               
     const [products, setProducts] = useState([]);                                    // Stato per memorizzare i prodotti
     const [filteredProducts, setFilteredProducts] = useState([]);                    // Stato per memorizzare i prodotti filtrati in base alla ricerca
     const [searchParams] = useSearchParams();                                        // Per gestire i parametri di ricerca nell'URL
@@ -18,14 +17,18 @@ export default function Shop (){
     const location = useLocation();                                                  // Per non mostrare il tasto quando si trova in "/shop"
     const [selectedCategory, setSelectedCategory] = useState("");                    // Se
 
-    
     useEffect(() => {
-        axios.get("http://localhost:3001/products")
-            .then(res => {
+        const fetchProducts = async () => {
+            try {
+                const res = await axios.get("http://localhost:3001/products");
                 console.log('Prodotti ricevuti:', res.data); // Debug
                 setProducts(res.data);
-            })
-            .catch(err => console.error(err));
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        
+        fetchProducts();
     }, []);
 
     useEffect(() => {
@@ -95,7 +98,6 @@ export default function Shop (){
         setWishlist(updated);
         localStorage.setItem("wishlist", JSON.stringify(updated));
     };
-
     
     const [compareList, setCompareList] = useState(() => {                     // Stato per la lista di confronto, sincronizzato con localStorage
         const saved = localStorage.getItem("compareList");
@@ -116,7 +118,7 @@ export default function Shop (){
         setCompareList(updated);
     };
 
-    const handleSearch = (term) => {                                    // Funzione per la ricerca con debounce
+    const handleSearch = (term) => {                                       // Funzione per la ricerca con debounce
         setFilteredProducts(
             (products || []).filter(product =>
                 product.title.toLowerCase().includes(term.toLowerCase())
@@ -124,7 +126,6 @@ export default function Shop (){
         );
     };
     
-
     return (
         <>
             <header className="container">
@@ -228,7 +229,7 @@ export default function Shop (){
                                                 <div>
                                                     <Link to={`/products/${product.id}`} style={{ textDecoration: "none" }}>
                                                         <h2 className="card-title" style={{
-                                                            fontSize: "28px",
+                                                            fontSize: "32px",
                                                             fontWeight: "bold",
                                                             color: "#333",
                                                             marginBottom: "10px",
