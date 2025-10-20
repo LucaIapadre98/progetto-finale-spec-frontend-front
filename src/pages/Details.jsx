@@ -1,6 +1,6 @@
 import MenuLink from "../components/MenuLink"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart} from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faCircleCheck} from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, use } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
@@ -13,6 +13,7 @@ export default function Details (){
     const [product, setProduct] = useState(null);
     const [filteredProducts, setFilteredProducts] = useState([]);               // Stato per i prodotti filtrati
     const [searchTerm, setSearchTerm] = useState("");                           // Stato per il termine di ricerca
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);                       // Stato per controllare la sidebar
 
     useEffect(() => {
        setFilteredProducts(
@@ -55,7 +56,7 @@ export default function Details (){
         return saved ? JSON.parse(saved) : [];                                 // Altrimenti ritorna con un array vuoto, converte in oggetto JS
     });
 
-    const toggleWishlist = (product) => {                                 // Funzione toggle che aggiunge i prodotti nella wishlist
+    const toggleWishlist = (product) => {                                   // Funzione toggle che aggiunge i prodotti nella wishlist
         let updated;
         if (wishlist.some(item => item.id === product.id)) {                 // Controlla se il prodotto è già nella wishlist
             updated = wishlist.filter(item => item.id !== product.id);       // Se è presente, rimuovilo
@@ -66,6 +67,23 @@ export default function Details (){
         localStorage.setItem("wishlist", JSON.stringify(updated));           // Aggiorna il localStorage con la wishlist aggiornata, convertendo in stringa JSON
     };
 
+    const [compareList, setCompareList] = useState(() => {                     // Stato per la lista di confronto, sincronizzato con localStorage
+        const saved = localStorage.getItem("compareList");
+        return saved ? JSON.parse(saved) : [];
+    });
+    useEffect(() => {                                                        // Aggiorna localStorage quando compareList cambia
+        localStorage.setItem("compareList", JSON.stringify(compareList));
+    }, [compareList]);
+
+    const toggleCompare = (product) => {                                     // Funzione toggle per aggiungere/rimuovere prodotti dalla lista di confronto
+        let updated;
+        if (compareList.some(item => item.id === product.id)) {
+            updated = compareList.filter(item => item.id !== product.id);
+        } else {
+            updated = [...compareList, product];
+        }
+        setCompareList(updated);
+    };
     
     return (
         <>
@@ -83,17 +101,128 @@ export default function Details (){
             </div>
             <div className="d-flex flex-md-row-reverse flex-grow-1 gap-3 col-12 col-sm-2 justify-content-center justify-content-md-start align-items-center">
                 <div className="buttons d-flex gap-3">
-                    <Link className="position-relative mt-2" to={`/wishlist`}>
-                        <FontAwesomeIcon className="fs-4" style={{ color: "#ff6543", fontFamily:"30px"}} icon={faHeart} />
-                    </Link>
+                    <button 
+                        className="btn "
+                        style={{ backgroundColor: "white", border: "none" }}
+                        type="button" 
+                        onClick={() => setIsSidebarOpen(true)}
+                    >
+                        <FontAwesomeIcon className="fs-4" style={{ color: "#ff6543", fontSize:"15px"}} icon={faHeart} />
+                    </button>
                 </div>
             </div>
         </header>
+        {/* Sidebar Wishlist */}
+            <div 
+                className={`sidebar-overlay ${isSidebarOpen ? 'active' : ''}`}                                  // Se la sidebar è aperta, aggiungi la classe 'active'
+                onClick={() => setIsSidebarOpen(false)}                                                         // Chiudi la sidebar al click sull'overlay
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    zIndex: 1000,
+                    opacity: isSidebarOpen ? 1 : 0,
+                    visibility: isSidebarOpen ? 'visible' : 'hidden',
+                    transition: 'opacity 0.3s ease'
+                }}
+            >
+                <div 
+                    className={`wishlist-sidebar ${isSidebarOpen ? 'open' : ''}`}
+                    onClick={(e) => e.preventDefault()}
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        right: isSidebarOpen ? 0 : '-400px',
+                        width: '400px',
+                        height: '100%',
+                        backgroundColor: 'white',
+                        boxShadow: '-2px 0 10px rgba(0, 0, 0, 0.1)',
+                        transition: 'right 0.3s ease',
+                        zIndex: 1001,
+                        padding: '20px',
+                        overflowY: 'auto'
+                    }}
+                >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                        <h3 style={{ margin: 0, color: '#ff6543' }}>Wishlist</h3>
+                        <button 
+                            onClick={() => setIsSidebarOpen(false)}                                                     // Chiudi la sidebar al click sul bottone
+                            style={{
+                                border: 'none',
+                                background: 'transparent',
+                                fontSize: '24px',
+                                cursor: 'pointer',
+                                color: 'black'
+                            }}
+                        >
+                            ×
+                        </button>
+                    </div>
+                    {wishlist.length === 0 ? (
+                        <p style={{ textAlign: 'center', color: "black ", marginTop: '50px', fontSize: '18px' }}>
+                            La tua wishlist è vuota
+                        </p>
+                    ) : (
+                        <div>
+                            {wishlist.map(item => (
+                                <div 
+                                    key={item.id} 
+                                    style={{
+                                        border: '1px solid #eee',
+                                        borderRadius: '8px',
+                                        padding: '15px',
+                                        marginBottom: '15px',
+                                        backgroundColor: '#f9f9f9'
+                                    }}
+                                >
+                                    <Link 
+                                        to={`/products/${item.id}`} 
+                                        style={{ 
+                                            color: '#ff6543', 
+                                            textDecoration: 'none',
+                                            fontSize: '14px'
+                                        }}
+                                        onClick={() => setIsSidebarOpen(false)}
+                                    >
+                                        <h5 style={{ margin: '0 0 5px 0', color: 'black', fontSize: "19px" }}>{item.title}</h5>
+                                    </Link>
+                                    <p style={{ margin: '0 0 10px 0', color: '#666', fontSize: '14px' }}>{item.category}</p>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <button
+                                            onClick={() => toggleWishlist(item)}
+                                            style={{
+                                                border: 'none',
+                                                background: 'transparent',
+                                                cursor: 'pointer',
+                                                color: '#ff6543',
+                                                fontSize: "24px"
+                                            }}
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+
         <main className="container-id">
-            <div className="button">
+            <div className="button" style={{display:"flex", justifyContent:"space-between"}}>
                 <Link to={`/shop`}>
                     <p>Torna allo shop</p>
                 </Link>
+                 {compareList.length >= 2 && (
+                    <span className="text-center my-3">
+                        <Link to="/compare" className="btn btn-success" style={{textDecoration:"none", border:"1px solid #ff6543", display:"inline-block", padding:"5px 10px", borderRadius:"4px", color:"#ff6543", margin:" 8px 10px"}}>
+                            Confronta {compareList.length} prodotti selezionati
+                        </Link>
+                    </span>
+                )}
             </div>
             <div className="container-card" style={{ display: "flex", justifyContent: "center", padding: "10px" }}>
                 <div className="row" style={{width:"100%", display:"flex", justifyContent:"center"}}>
@@ -201,7 +330,6 @@ export default function Details (){
                                             )}
                                         </div>
                                     </div>
-                                    
                                     <div style={{
                                         display: "flex",
                                         justifyContent: "center",
@@ -217,6 +345,24 @@ export default function Details (){
                                         >
                                             <FontAwesomeIcon icon={faHeart} />
                                             {wishlist.some(item => item.id === product.id)}
+                                        </button>
+                                        <button
+                                            onClick={() => toggleCompare(product)}
+                                            style={{
+                                                background: "white",
+                                                cursor: "pointer",
+                                                border: "1px solid #ff6543",
+                                                padding: "10px 20px",
+                                                marginLeft: "10px",
+                                            }}
+                                        >
+                                            <FontAwesomeIcon icon={faCircleCheck}
+                                                style={{
+                                                    color: compareList.some(item => item.id === product.id) ? "green" : "hsla(113, 90%, 72%, 1.00)",
+                                                    backgroundColor: compareList.some(item => item.id === product.id) ? "#eaffea" : "white"
+                                                }}
+                                            />
+                                            {compareList.some(item => item.id === product.id)}
                                         </button>
                                     </div>
                                 </div>

@@ -15,13 +15,14 @@ export default function Shop (){
     const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "" );      // Memorizzare il testo digitato dall’utente nella barra di ricerca.
     const [sortOrder, setSortOrder] = useState({ field: null, asc: true });          // Per mostarre i prodotti in ordine
     const location = useLocation();                                                  // Per non mostrare il tasto quando si trova in "/shop"
-    const [selectedCategory, setSelectedCategory] = useState("");                    // Se
+    const [selectedCategory, setSelectedCategory] = useState("");                    // Stato per memorizzare la categoria selezionata
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);                       // Stato per controllare la sidebar
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
                 const res = await axios.get("http://localhost:3001/products");
-                console.log('Prodotti ricevuti:', res.data); // Debug
+                console.log('Prodotti ricevuti:', res.data); 
                 setProducts(res.data);
             } catch (err) {
                 console.error(err);
@@ -36,7 +37,7 @@ export default function Shop (){
         if (brand) {                                                    // Se esiste il parametro "brand", filtra i prodotti
             setFilteredProducts(                                        // Aggiorna i prodotti filtrati
                 products.filter(
-                    (product) => product.brand === brand    //Confronta il brand del prodotto con il parametro "brand"
+                    (product) => product.brand === brand               //Confronta il brand del prodotto con il parametro "brand"
                 )
             );
         } else {
@@ -48,7 +49,7 @@ export default function Shop (){
         e.preventDefault();
         setFilteredProducts(                                              // Aggiorna i prodotti filtrati in base al termine di ricerca
             (products || []).filter(product =>                            //Prodotti che includono il termine di ricerca
-                product.title.toLowerCase().includes(searchTerm.toLowerCase())
+                product.title.toLowerCase().startsWith(searchTerm.toLowerCase())
             )
         );
     };
@@ -74,6 +75,7 @@ export default function Shop (){
         setFilteredProducts(sorted);
         setSortOrder({ field: "category", asc });
     };
+
     const [wishlist, setWishlist] = useState(() => {                           // Recupera la wishlist dal localStorage se esiste
         const saved = localStorage.getItem("wishlist");                        
         return saved ? JSON.parse(saved) : [];                                 // Altrimenti ritorna con un array vuoto     
@@ -84,16 +86,15 @@ export default function Shop (){
         console.log('Prezzo del prodotto:', product.price); 
         
         let updated;
-        if (wishlist.some(item => item.id === product.id)) {
-            updated = wishlist.filter(item => item.id !== product.id);
+        if (wishlist.some(item => item.id === product.id)) {                   // Se il prodotto è già nella wishlist, rimuovilo
+            updated = wishlist.filter(item => item.id !== product.id);         // Altrimenti, aggiungilo
         } else {
-            const completeProduct = {
-                id: product.id,
+            const completeProduct = {                                          // Crea un oggetto prodotto completo con le proprietà necessarie
+                id: product.id, 
                 title: product.title,
                 category: product.category,
             };
-            console.log('Prodotto completo da salvare:', completeProduct); // Debug
-            updated = [...wishlist, completeProduct];
+            updated = [...wishlist, completeProduct];                        // Aggiungi il prodotto completo alla wishlist
         }
         setWishlist(updated);
         localStorage.setItem("wishlist", JSON.stringify(updated));
@@ -118,10 +119,10 @@ export default function Shop (){
         setCompareList(updated);
     };
 
-    const handleSearch = (term) => {                                       // Funzione per la ricerca con debounce
+    const handleSearch = (termine) => {                                       // Funzione per la ricerca con debounce
         setFilteredProducts(
             (products || []).filter(product =>
-                product.title.toLowerCase().includes(term.toLowerCase())
+                product.title.toLowerCase().startsWith(termine.toLowerCase())
             )
         );
     };
@@ -148,12 +149,117 @@ export default function Shop (){
                 />
                 <div className="d-flex flex-md-row-reverse flex-grow-1 gap-3 col-12 col-sm-2 justify-content-center justify-content-md-start align-items-center">
                     <div className="buttons d-flex gap-3">
-                        <Link className="position-relative mt-2" to={`/wishlist`}>
-                            <FontAwesomeIcon className="fs-4" style={{ color: "#ff6543", fontFamily:"30px"}} icon={faHeart} />
-                        </Link>
+                        <button 
+                            className="btn "
+                            style={{ backgroundColor: "white", border: "none" }}
+                            type="button" 
+                            onClick={() => setIsSidebarOpen(true)}
+                        >
+                            <FontAwesomeIcon className="fs-4" style={{ color: "#ff6543", fontSize:"15px"}} icon={faHeart} />
+                        </button>
                     </div>
-              </div>
+                </div>
             </header>
+
+            {/* Sidebar Wishlist */}
+            <div 
+                className={`sidebar-overlay ${isSidebarOpen ? 'active' : ''}`}                                  // Se la sidebar è aperta, aggiungi la classe 'active'
+                onClick={() => setIsSidebarOpen(false)}                                                         // Chiudi la sidebar al click sull'overlay
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    zIndex: 1000,
+                    opacity: isSidebarOpen ? 1 : 0,
+                    visibility: isSidebarOpen ? 'visible' : 'hidden',
+                    transition: 'opacity 0.3s ease'
+                }}
+            >
+                <div 
+                    className={`wishlist-sidebar ${isSidebarOpen ? 'open' : ''}`}
+                    onClick={(e) => e.preventDefault()}
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        right: isSidebarOpen ? 0 : '-400px',
+                        width: '400px',
+                        height: '100%',
+                        backgroundColor: 'white',
+                        boxShadow: '-2px 0 10px rgba(0, 0, 0, 0.1)',
+                        transition: 'right 0.3s ease',
+                        zIndex: 1001,
+                        padding: '20px',
+                        overflowY: 'auto'
+                    }}
+                >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                        <h3 style={{ margin: 0, color: '#ff6543' }}>Wishlist</h3>
+                        <button 
+                            onClick={() => setIsSidebarOpen(false)}                                                     // Chiudi la sidebar al click sul bottone
+                            style={{
+                                border: 'none',
+                                background: 'transparent',
+                                fontSize: '24px',
+                                cursor: 'pointer',
+                                color: 'black'
+                            }}
+                        >
+                            ×
+                        </button>
+                    </div>
+                    {wishlist.length === 0 ? (
+                        <p style={{ textAlign: 'center', color: "black ", marginTop: '50px', fontSize: '18px' }}>
+                            La tua wishlist è vuota
+                        </p>
+                    ) : (
+                        <div>
+                            {wishlist.map(item => (
+                                <div 
+                                    key={item.id} 
+                                    style={{
+                                        border: '1px solid #eee',
+                                        borderRadius: '8px',
+                                        padding: '15px',
+                                        marginBottom: '15px',
+                                        backgroundColor: '#f9f9f9'
+                                    }}
+                                >
+                                    <Link 
+                                        to={`/products/${item.id}`} 
+                                        style={{ 
+                                            color: '#ff6543', 
+                                            textDecoration: 'none',
+                                            fontSize: '14px'
+                                        }}
+                                        onClick={() => setIsSidebarOpen(false)}
+                                    >
+                                        <h5 style={{ margin: '0 0 5px 0', color: 'black', fontSize: "19px" }}>{item.title}</h5>
+                                    </Link>
+                                    <p style={{ margin: '0 0 10px 0', color: '#666', fontSize: '14px' }}>{item.category}</p>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <button
+                                            onClick={() => toggleWishlist(item)}
+                                            style={{
+                                                border: 'none',
+                                                background: 'transparent',
+                                                cursor: 'pointer',
+                                                color: '#ff6543',
+                                                fontSize: "24px"
+                                            }}
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+
             <main>
             <div className="container-card">
                 <div className="row">
@@ -199,15 +305,15 @@ export default function Shop (){
                         </div>
                     </div>
                     <div className="col-12"> 
-                        <div className="row">
+                        <div className="row" >
                             {selectedCategory === "Tablet" &&
                                 filteredProducts.filter(p => p.category === "Tablet").length === 0 && (
-                                <div className="alert alert-warning text-center my-4">
+                                <div className="alert alert-warning text-center" >
                                     Nessun tablet disponibile per questo brand
                                 </div>
                             )}            
                             {filteredProducts.length === 0 ? (
-                                <div className="row justify-content-center" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>Nessun prodotto trovato</div>
+                                <div className="row justify-content-center" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", padding: "10px", border: "1px solid rgb(103, 103, 255)" }}>Nessun prodotto trovato</div>
                             ) : (
                                 filteredProducts
                                     .filter(product => selectedCategory === "" ? true : product.category === selectedCategory)
